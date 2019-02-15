@@ -1,0 +1,129 @@
+div#survey-contents:not(.TG) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  white-space: pre-wrap;
+}
+
+a {
+  color: #00B7FF;
+}
+
+div.survey-wrapper{
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+
+span.question-number {
+  font-weight:bold;
+}
+
+span.example-span{
+  text-align: left;
+}
+
+label.example-label:hover {
+  cursor: pointer;
+  color: darkred;
+}
+
+:checked + span.example-span {
+  font-weight: bold;
+}
+
+input:checked + label.example-label-matrix{
+  /*background-color: red;*/
+}
+
+div.question-wrapper.image-module img {
+  max-width: 100%;
+  text-align:center;
+}
+
+/*OLD SCHOOL*/
+span.emphasis_blackB {
+  font-weight:bold;
+  color: black;
+}
+
+span.emphasis_blueB{
+  font-weight:bold;
+  color: blue;
+}
+
+span.emphasis_blackBU{
+  font-weight:bold;
+  color: black;
+  text-decoration: underline;
+}
+
+div.survey-valid-dialog{
+  position: relative;
+  font-size: 0.8rem;
+}
+
+div.survey-valid-dialog:after{
+  content: ' ';
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: 0;
+  top: 10px;
+  border: 10px solid transparent;
+  border-right-color: #f5365c;
+  border-left: 0;
+  border-top: 0;
+  margin-top: -10px;
+  margin-left: -10px;
+}
+
+div.survey-logo > img {
+  max-width: 100%;
+}
+
+div.example-cols-div.selected{
+  background-color: bisque;
+}
+
+@media (max-width: 576px) {
+  div#survey-contents * {
+    font-size: 0.8rem;
+  }
+}
+@media (min-width: 576px) and (max-width: 768px) {
+  div#survey-contents * {
+    font-size: 0.8rem;
+  }
+}
+
+
+@media (min-width: 768px) and (max-width: 992px) {
+  div#survey-contents * {
+    font-size: 0.9rem;
+  }
+}
+
+
+@media (min-width: 992px) and (max-width: 1200px) {
+  div#survey-contents * {
+    font-size: 0.9rem;
+  }
+}
+
+
+@media (min-width: 1200px) {
+  div#survey-contents * {
+    font-size: 1.0rem;
+  }
+}
+
+div.number-invalid-feedback{
+  color: red;
+  font-weight: bold;
+  display: block;
+  margin-left: 0.5rem;
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Quota</title>
+    <style>
+        body, html {
+            height: 100%;
+        }
+        div.h-10 {
+            height: 10% !important;
+        }
+        div.h-90 {
+            height: 90% !important;
+        }
+    </style>
+</head>
+<body class="bg-secondary">
+
+<div class="container-fluid h-90">
+    <div class="row">
+        <div class="col-12 h-10 text-center">
+            <h4>Quota 설정</h4>
+        </div>
+    </div>
+    <div class="row h-100" id="show-quota-wrapper">
+        <div class="col-10 offset-1 text-center h-75 align-middle">
+            <div class="d-block bg-white border-light border rounded h-100 p-2" id="show-quota-area" style="overflow-y:auto;">
+                <h4 class="align-middle">설정된 쿼터가 없습니다.</h4>
+            </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="col-10 offset-1 h-25">
+            <button class="btn btn-danger btn-lg btn-block" id="new-quota-btn">추가</button>
+        </div>
+    </div>
+    <div class="row h-100 d-none" id="new-quota-wrapper">
+        <div class="col-12">
+            <button class="btn btn-danger float-right btn-sm" id="new-quota-close-btn">X</button>
+        </div>
+        <div class="col-2 h-90">
+            <ol id="question-list" class=" h-100" style="overflow-y: auto;"></ol>
+        </div>
+        <div class="col-10 h-90">
+            <form class="form-inline w-100 h-75">
+                <div id="new-quota-area" class="h-100 border border-light rounded bg-white p-3 w-100" style="overflow-y: auto;">
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

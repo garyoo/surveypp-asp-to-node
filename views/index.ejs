@@ -1,0 +1,33 @@
+<%
+//if (query.pid === undefined || query.pid === '') res.end('invalid Parameters');
+
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Survey</title>
+</head>
+<body class="bg-secondary">
+<div class="position-fixed w-100" id="user-agent"></div>
+<div class="container-fluid mb-4">
+    <div class="row">
+        <div class="col-12 col-sm-10 col-lg-8 offset-sm-1 offset-lg-2 mt-4 shadow rounded bg-white" id="survey-progress" data-aos="zoom-in" data-aos-duration="15000" data-aos-easing="linear">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-sm-10 col-lg-8 offset-sm-1 offset-lg-2 mt-4 shadow-sm py-4 rounded bg-white">
+            <div class="row mt-2">
+                <div class="col-12" id="survey-contents">
+                </div>
+            </div>
+            <div class="row my-4">
+                <div class="col-12" id="survey-btns">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js?autoload=false"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+import $http from 'axios';
+import topMenu from '../src/topMenu';
+export default class ReportLoader {
+    _questions?: {};
+    constructor(private projectID: string){
+        this.getQuestions().then((data) => {
+            this.questions = data;
+        });
+    }
+
+    get questions() {
+        return this._questions;
+    }
+
+    set questions(value) {
+        this._questions = value;
+    }
+
+    async getQuestions(): Promise<object> {
+        try{
+            let response = await $http.post('/api/getQuestions',{projectID: this.projectID});
+            if (response.status === 200) return response.data.questionsObject;
+            return {};
+        } catch(e) {
+            return {errMsg: e.message};
+        }
+    }
+
+    async getReport(): Promise<Array<{_id: string, projectID: string, questions: Array<string>, maxPage: number, reportValues:Array<{name: string, value:string, cnt:string}>}>> {
+        try{
+            let response = await $http.post('/api/getReport',{projectID: this.projectID});
+            if (response.status === 200) return response.data;
+            return [];
+        } catch(e) {
+            return [];
+        }
+    }
+
+    async getReportCompleteCnt(questions: Array<string>): Promise<Array<{name: string, value: string, cnt: number, comCnt: number}>> {
+        try{
+            let response = await $http.post('/api/getReportCnt',{projectID: this.projectID, questions: questions});
+            if (response.status === 200) return response.data;
+            return [];
+        } catch(e) {
+            return [];
+        }
+        return [];
+    }
+
+
+
+    async setReport(params: object): Promise<object> {
+        try{
+            let response = await $http.post('/api/setReport',{projectID: this.projectID, ... params});
+            if (response.status === 200) return response.data;
+            return {};
+        } catch(e) {
+            return {errMsg: e.message};
+        }
+    }
+
+    async removeReport(objectID: string): Promise<object> {
+        try{
+            let response = await $http.post('/api/removeReport',{projectID: this.projectID, objectID: objectID});
+            if (response.status === 200) return response.data;
+            return {};
+        } catch(e) {
+            return {errMsg: e.message};
+        }
+    }
+}

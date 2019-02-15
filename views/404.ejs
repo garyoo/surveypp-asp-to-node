@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SURVEYPP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12 col-sm-10 col-lg-8 offset-sm-1 offset-lg-2 text-center" id="survey-contents">
+            <div class="d-inline-flex">
+                <%if (errMsg) {%>
+                    <p class="text-center d-inline"><%=errMsg%></p>
+                <%} else {%>
+                    <p class="text-center d-inline">404 ERROR</p>
+                <%}%>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./survey.bundle.js" type="text/javascript"></script>
+</body>
+</html>
