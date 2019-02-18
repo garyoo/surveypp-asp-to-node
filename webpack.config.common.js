@@ -20,35 +20,47 @@ module.exports = {
     },
     entry: {
         'default': [
-            '@babel/polyfill',
-            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
             'bootstrap/dist/css/bootstrap.min.css',
             'argon-design-system-free/assets/css/argon.css',
         ],
         'survey': [
+            '@babel/polyfill',
+            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
             './public/stylesheets/style.css',
             './src/index.ts',
         ],
         'quota': [
+            '@babel/polyfill',
+            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
             './src/quota.ts',
         ],
         'quotaView': [
+            '@babel/polyfill',
+            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
             './src/quotaView.ts',
         ],
         'login': [
+            '@babel/polyfill',
+            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
             './src/login.ts',
         ],
         'router': [
+            '@babel/polyfill',
+            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
             './src/router.ts',
         ],
         'report': [
+            '@babel/polyfill',
+            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
             './src/report.ts',
         ],
         'fieldWorkView': [
-            'bootstrap/js/dist/dropdown.js',
+            '@babel/polyfill',
+            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
             './src/fieldWorkView.ts',
         ],
         'topMenu': [
+            'bootstrap/js/dist/dropdown.js',
             './src/topMenu.ts'
         ]
     },
