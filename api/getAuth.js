@@ -1,4 +1,4 @@
-module.exports = async function load(req, db, forceParams){
+module.exports = async function load(req, res, next, db, forceParams){
     const jwt = require('jsonwebtoken');
     const fs = require('fs');
     const path = require('path');
@@ -8,6 +8,7 @@ module.exports = async function load(req, db, forceParams){
         const authKey = forceParams ? params.akey : params.authKey;
         const mode = params.mode || 'file';
         const redirectUrl = params.redirectUrl;
+        console.log(req.body, req.query);
         let pass = false;
         if (pid === undefined) return {errMsg: 'invalid parameters'};
         let output ={};

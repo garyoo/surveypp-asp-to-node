@@ -130,7 +130,7 @@ router.use(async (req, res, next) => {
             if (req.query.akey) {
                 let authPath = path.join(__dirname, 'api', 'getAuth.js');
                 if (process.env.NODE_ENV === "development") delete require.cache[require.resolve(authPath)];
-                let result = await require(authPath)(req, mongo, true);
+                let result = await require(authPath)(req, res, next, mongo, true);
             }
             if(req.session.userID === undefined) {
                 return res.render('login', {query: req.query, res: res});
