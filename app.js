@@ -127,6 +127,11 @@ router.use(async (req, res, next) => {
             outputData = await require(dataFilePath)(req, res, next, mongo);
         }
         if (renderPage.auth && req.session) {
+            if (req.query.akey) {
+                let authPath = path.join(__dirname, 'api', 'getAuth.js');
+                if (process.env.NODE_ENV === "development") delete require.cache[require.resolve(authPath)];
+                let result = await require(authPath)(req, mongo, true);
+            }
             if(req.session.userID === undefined) {
                 return res.render('login', {query: req.query, res: res});
             } else {

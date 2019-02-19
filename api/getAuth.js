@@ -1,11 +1,11 @@
-module.exports = async function load(req, db){
+module.exports = async function load(req, db, forceParams){
     const jwt = require('jsonwebtoken');
     const fs = require('fs');
     const path = require('path');
     return (async function (){
-        const params = req.body;
-        const pid = params.projectID;
-        const authKey = params.authKey;
+        const params = forceParams ? req.query : req.body;
+        const pid = forceParams ? params.pid : params.projectID;
+        const authKey = forceParams ? params.akey : params.authKey;
         const mode = params.mode || 'file';
         const redirectUrl = params.redirectUrl;
         let pass = false;

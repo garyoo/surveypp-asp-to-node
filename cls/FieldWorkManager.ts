@@ -4,6 +4,7 @@ export default class FieldWorkManager{
 
     dateChart?: HTMLCanvasElement;
     dateChartWrapper?: HTMLDivElement;
+    dateTableWrapper?: HTMLDivElement;
     projectID: string;
 
     constructor ({projectID}: {projectID: string}) {
@@ -13,6 +14,7 @@ export default class FieldWorkManager{
         if (document.getElementById('date-chart-wrapper')) {
             this.dateChart = document.createElement('canvas');
             this.dateChartWrapper = document.getElementById('date-chart-wrapper') as HTMLDivElement;
+            this.dateTableWrapper = document.getElementById('date-table-wrapper') as HTMLDivElement;
             this.getDateChartData();
         }
     }
@@ -23,6 +25,7 @@ export default class FieldWorkManager{
             this.dateChart.setAttribute('height', '400');
             this.dateChartWrapper.appendChild(this.dateChart);
             this.renderDateChart();
+            this.renderDateTable();
         }
     }
 
@@ -101,6 +104,20 @@ export default class FieldWorkManager{
                     }
                 });
             }
+        }
+    }
+
+
+    renderDateTable() {
+        if (this.dateTableWrapper) {
+            let tableData;
+            try {
+                tableData = this.dateTableWrapper.getAttribute('data-table');
+                if (tableData) tableData = JSON.parse(tableData);
+            } catch (e) {
+
+            }
+            console.log(tableData);
         }
     }
 

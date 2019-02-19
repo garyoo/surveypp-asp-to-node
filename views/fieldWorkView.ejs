@@ -47,7 +47,8 @@
     <div class="row mt-4">
         <div class="col-10 offset-1 border rounded p-4" style="height:50vh;">
             <h5>일자별 참여자 수</h5>
-            <div id="date-chart-wrapper" class="h-100" data-chart="<%=JSON.stringify(data.dateStatus ? data.dateStatus : {})%>"></div>
+            <div id="date-chart-wrapper" data-chart="<%=JSON.stringify(data.dateStatus ? data.dateStatus : {})%>"></div>
+            <div id="date-table-wrapper" data-table="<%=JSON.stringify(data.dateStatus ? data.dateStatus : {})%>"></div>
         </div>
     </div>
 </div>
