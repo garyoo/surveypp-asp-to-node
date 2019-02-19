@@ -13,6 +13,7 @@ const webConfig = {
     mode: 'development',
     plugins: [
         new CleanWebpackPlugin(['dist']),
+        new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackHardDiskPlugin(),
         new CopyWebpackPlugin([
@@ -23,7 +24,8 @@ const webConfig = {
             */
         ]),
     ],
-    devtool: "inline-source-map",
+    //devtool: "inline-source-map",
+    devtool: '#source-map',
     devServer: {
         contentBase: path.resolve(__dirname, "dist"),
         watchContentBase: true,

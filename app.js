@@ -129,6 +129,9 @@ router.use(async (req, res, next) => {
         if (renderPage.auth && req.session) {
             if(req.session.userID === undefined) {
                 return res.render('login', {query: req.query, res: res});
+            } else {
+                req.session._garbage = Date();
+                req.session.touch();
             }
         }
         if (outputData) {

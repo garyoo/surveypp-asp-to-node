@@ -8,6 +8,7 @@
     "dev": "webpack --mode=development --env.NODE_ENV=development --define process.env.NODE_ENV='development'  --config webpack.config.dev.js && set NODE_ENV=development&& node.exe --inspect=127.0.0.1:9229 .\\app.js"
   },
   "dependencies": {
+    "@types/chart.js": "^2.7.45",
     "aos": "^3.0.0-beta.6",
     "argon-design-system-free": "^1.0.1",
     "axios": "^0.18.0",

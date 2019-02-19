@@ -3,9 +3,10 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const SriPlugin = require('webpack-subresource-integrity');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
+const hmwScript = `webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true`;
 module.exports = {
     target: 'web',
+    context: __dirname,
     output: {
         path: path.join(__dirname, 'dist'),
         publicPath: '/',
@@ -25,38 +26,38 @@ module.exports = {
         ],
         'survey': [
             '@babel/polyfill',
-            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
+            hmwScript,
             './public/stylesheets/style.css',
             './src/index.ts',
         ],
         'quota': [
             '@babel/polyfill',
-            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
+            hmwScript,
             './src/quota.ts',
         ],
         'quotaView': [
             '@babel/polyfill',
-            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
+            hmwScript,
             './src/quotaView.ts',
         ],
         'login': [
             '@babel/polyfill',
-            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
+            hmwScript,
             './src/login.ts',
         ],
         'router': [
             '@babel/polyfill',
-            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
+            hmwScript,
             './src/router.ts',
         ],
         'report': [
             '@babel/polyfill',
-            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
+            hmwScript,
             './src/report.ts',
         ],
         'fieldWorkView': [
             '@babel/polyfill',
-            'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
+            hmwScript,
             './src/fieldWorkView.ts',
         ],
         'topMenu': [
@@ -111,7 +112,7 @@ module.exports = {
         new webpack.ProvidePlugin({
             _: "underscore"
         }),
-        new webpack.HotModuleReplacementPlugin(),
+        //new webpack.HotModuleReplacementPlugin(),
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional
