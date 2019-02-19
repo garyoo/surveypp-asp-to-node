@@ -171,6 +171,8 @@ class ReportTable {
                 this.reportInputs.push($quotaInput[0]);
                 this.reportTds.push({name: name, value: value, dom: $td[0]});
             });
+            let $trTotal = $(`<tr><td class="text-center align-middle p-1">TOTAL</td><td></td></tr>`);
+            $trTotal.appendTo($tbody);
         }
         else if (this.reportData.length === 2 ) {
             let que1 = this.reportData[0];
