@@ -3,6 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>FIELD WORK VIEW</title>
+    <style>
+        table.table {
+            font-size: 0.8rem;
+        }
+        table.table th, table.table td {
+            text-align:center !important;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        table.table > tbody > tr > td.date{
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body class="bg-secondary">
 <%include ./includes/topMenu.ejs%>
@@ -45,10 +59,93 @@
         </div>
     </div>
     <div class="row mt-4">
-        <div class="col-10 offset-1 border rounded p-4" style="height:50vh;">
+        <div class="col-10 offset-1 border rounded p-4">
             <h5>일자별 참여자 수</h5>
             <div id="date-chart-wrapper" data-chart="<%=JSON.stringify(data.dateStatus ? data.dateStatus : {})%>"></div>
-            <div id="date-table-wrapper" data-table="<%=JSON.stringify(data.dateStatus ? data.dateStatus : {})%>"></div>
+            <div id="date-table-wrapper" data-table="<%=JSON.stringify(data.dateStatus ? data.dateStatus : {})%>" class="mt-4">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Total</th>
+                            <th>CO(%)</th>
+                            <th>CO Column%</th>
+                            <th>SO(%)</th>
+                            <th>QF(%)</th>
+                            <th>Bad</th>
+                            <th>Drop</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                        if(data.dateStatus){
+                            let dateStatus = data.dateStatus;
+                            if(dateStatus.Total) {
+                                Object.keys(dateStatus.Total).forEach(key => {
+                                    let totalItem = dateStatus.Total[key];
+                                    let completeItem = (dateStatus.Completed ? (dateStatus.Completed[key] ? `${dateStatus.Completed[key]}(${((dateStatus.Completed[key]/totalItem)*100).toFixed(1)}%)` : '0(0%)') : '0(0%)');
+                                    let screenItem = (dateStatus.Screened ? (dateStatus.Screened[key] ? `${dateStatus.Screened[key]}(${((dateStatus.Screened[key]/totalItem)*100).toFixed(1)}%)` : '0(0%)') : '0(0%)');
+                                    let quotaFullItem = (dateStatus.QuotaFull ? (dateStatus.QuotaFull[key] ? `${dateStatus.QuotaFull[key]}(${((dateStatus.QuotaFull[key]/totalItem)*100).toFixed(1)}%)` : '0(0%)') : '0(0%)');
+                        %>
+                            <tr>
+                                <td class="date"><%=key%></td>
+                                <td><%=totalItem%></td>
+                                <td><%=completeItem%></td>
+                                <td>0</td>
+                                <td><%=screenItem%></td>
+                                <td><%=quotaFullItem%></td>
+                                <td><%=(dateStatus.BadAnswer ? (dateStatus.BadAnswer[key]||0) : 0)%></td>
+                                <td><%=(dateStatus.Drop ? (dateStatus.Drop[key]||0) : 0)%></td>
+                            </tr>
+                        <%
+                                });
+                            }
+                        }%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-10 offset-1 border rounded p-4">
+            <h5>응답자 문의사항</h5>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>처리</th>
+                        <th>문의일시<br/>(처리일시)</th>
+                        <th>resid/grpid</th>
+                        <th>페이지<br/>(문의/현재)</th>
+                        <th>제목</th>
+                        <th>내용</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="6" class="p-4">추후 반영</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-10 offset-1 border rounded p-4">
+            <h5>완료자 응답시간</h5>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>N</th>
+                        <th>Avg</th>
+                        <th>Avg<br/>(제외 Top/Bot. 2.5%)</th>
+                        <th>Min</th>
+                        <th>Max</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="p-4">추후 제공 예정</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

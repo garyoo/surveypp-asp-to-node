@@ -1,0 +1,53 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Quota</title>
+    <style>
+        body, html {
+            height: 100%;
+        }
+        div.h-10 {
+            height: 10% !important;
+        }
+        div.h-90 {
+            height: 90% !important;
+        }
+    </style>
+</head>
+<body class="bg-secondary">
+<%include ./includes/topMenu.ejs%>
+<div class="container-fluid h-90 mt-4">
+    <div class="row">
+        <div class="col-12 h-10 text-center">
+            <h4>Quota 현황 링크</h4>
+        </div>
+        <div class="col-10 offset-1 bg-white rounded border">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>note</th>
+                        <th>link</th>
+                        <th>등록일시</th>
+                        <th>제어</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th colspan="5" class="text-right">
+                            <button type="button" class="btn btn-secondary" id="quota-dist-add-btn">현황 추가</button>
+                        </th>
+                    </tr>
+                </tfoot>
+                <tbody id="quota-link-tbody">
+                    <tr id="no-contents" class="d-none">
+                        <td colspan="5" class="text-center">설정된 링크가 없습니다.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

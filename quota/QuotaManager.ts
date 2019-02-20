@@ -1,13 +1,11 @@
 import $ from 'jquery';
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'argon-design-system-free/assets/css/argon.css';
 import 'aos/dist/aos.css';
+import Bmodal from 'bootstrap/js/dist/modal.js';
+
 import QuotaLoader from "./QuotaLoader";
 import {Que} from "../vo/Que.vo";
 import {QuestionType} from "../enum/QuestionType";
 import ClickEvent = JQuery.ClickEvent;
-
 class QuotaTable {
     quotaInputs: Array<HTMLInputElement> = [];
     quotaTds: Array<{name: string, value: string, dom:HTMLElement}> = [];
@@ -450,5 +448,136 @@ export class QuotaManager {
             $li.text(que.QtnName);
         });
     }
+}
 
+export class QuotaDistAddModal {
+    modal: Bmodal;
+    checkboxes: Array<HTMLInputElement> = [];
+    $saveBtn: JQuery<HTMLButtonElement>
+    quotaLoader: QuotaLoader;
+
+    constructor({data, quotaLoader}: {data: Array<{_id: string, projectID: string, questions: Array<string>, maxPage: number, quotaValues:Array<{name: string, value:string, cnt:string}>}>, quotaLoader: QuotaLoader}) {
+        // language=HTML
+        let modalHtml = `<div class="modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">쿼터 문항 선택</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>선택</th>
+                            <th>No</th>
+                            <th>쿼터변수</th>
+                            <th>Title</th>
+                            <th>Filter</th>
+                        </tr>
+                    </thead>
+                    <tbody id="quota-dist-table-tbody">
+                    </tbody>
+                </table>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+        let $element = $(modalHtml).appendTo('body');
+        let $tbody = $element.find('tbody');
+        let $footer = $element.find('div.modal-footer');
+
+        this.$saveBtn = $(`<button type="button" class="btn btn-primary">저장</button>`);
+        this.$saveBtn.get(0).addEventListener('click',(e: Event) => this.save(e));
+        this.$saveBtn.prependTo($footer);
+
+        this.quotaLoader = quotaLoader;
+        for(let d of data) {
+            let $cb: JQuery<HTMLInputElement> = $(`<input type="checkbox" value="${d._id}" id="quota-dist-${d._id}"/>`);
+            this.checkboxes.push($cb.get(0));
+            let $tr: JQuery<HTMLTableRowElement> = $('<tr></tr>');
+            $('<td></td>').appendTo($tr).append($cb);
+            $(`<td style="font-size:0.7rem;">${d._id}</td>`).appendTo($tr);
+            $(`<td>${d.questions.join(',')}</td>`).appendTo($tr);
+            $(`<td></td>`).appendTo($tr);
+            $(`<td></td>`).appendTo($tr);
+            $tr.appendTo($tbody);
+        }
+
+        this.modal = new Bmodal($element.get(0),{});
+    }
+
+    toggle(flag: boolean): void {
+        if (flag) {
+            this.modal.show();
+        } else {
+            this.modal.hide();
+        }
+    }
+
+    save(event: Event) : void {
+        let checked = this.checkboxes.filter(c => c.checked);
+        if (!checked.length) {
+            alert(`쿼터 변수를 선택해주세요.`);
+            return;
+        }
+        this.$saveBtn.get(0).disabled = true;
+        this.quotaLoader.setQuotaDist({_ids: checked.map(c => c.value)})
+            .then(result => {
+                if (result['errMsg']){
+                    alert(result['errMsg']);
+                } else if (result['msg']) {
+                    alert(result['msg']);
+                    this.toggle(false);
+                }
+                this.$saveBtn.get(0).disabled = false;
+            })
+            .catch(error => {
+                alert(error);
+            });
+    }
+}
+
+export class QuotaDistManager {
+    addBtn?: HTMLButtonElement|null;
+    quotaLoader: QuotaLoader;
+    modalCls?: QuotaDistAddModal;
+    $linkTbody?: HTMLElement|null;
+    quotaObject: Array<{_id: string, projectID: string, questions: Array<string>, maxPage: number, quotaValues:Array<{name: string, value:string, cnt:string}>}> = [];
+    quotaDist: Array<object> = [];
+    constructor(private projectID: string) {
+        if (document.getElementById('quota-dist-add-btn')) {
+            this.addBtn = document.getElementById('quota-dist-add-btn') as HTMLButtonElement;
+            this.addBtn.addEventListener('click', (e:Event) => this.addQuotaDist(e));
+        }
+
+        if(document.getElementById('quota-link-tbody')) {
+            this.$linkTbody = document.getElementById('quota-link-tbody');
+        }
+
+        this.quotaLoader = new QuotaLoader(this.projectID);
+
+    }
+
+    async init(): Promise<void> {
+        if (this.$linkTbody) {
+            this.quotaObject = await this.quotaLoader.getQuota();
+            this.quotaDist = await this.quotaLoader.getQuotaDist();
+            console.log(this.quotaDist);
+            this.modalCls = new QuotaDistAddModal({data:this.quotaObject, quotaLoader: this.quotaLoader});
+        }
+    }
+
+    addQuotaDist(evt: Event) {
+        if (!this.quotaObject.length) {
+            alert('설정된 쿼터가 없습니다.');
+            return;
+        }
+        if (this.modalCls) this.modalCls.toggle(true);
+    }
 }

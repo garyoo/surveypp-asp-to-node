@@ -85,8 +85,8 @@ router.post(/^\/(api)\/(.+)/, async (req, res, next) => {
     if (fs.existsSync(dataFilePath)){
         if (process.env.NODE_ENV === "development") delete require.cache[require.resolve(dataFilePath)];
         output = await require(`./api/${request}.js`)(req, mongo, mssql);
-        if (output.redirectUrl) return res.redirect(output.redirectUrl)
-        if (output.errMsg) return res.render('error', {message: output.errMsg});
+        if (output.redirectUrl) return res.redirect(output.redirectUrl);
+        if (output.errMsg) res.end(JSON.stringify(output));//return res.render('error', {message: output.errMsg});
         return res.end(JSON.stringify(output));
     }
     return next();
@@ -107,7 +107,8 @@ router.use(async (req, res, next) => {
         {request: 'error', template: 'error'},
         {request: 'router', template: 'router', async: true},
         {request: 'quota', template: 'quota',auth: true},
-        {request: 'quotaView', template: 'quotaView'},
+        {request: 'quotaDist', template: 'quotaDist',auth: true},
+        {request: 'quotaView', template: 'quotaView', async: true},
         {request: 'login', template: 'login', async: true},
         {request: 'report', template: 'report',auth: true},
         {request: 'fieldWorkView', template: 'fieldWorkView', auth: true, async: true},

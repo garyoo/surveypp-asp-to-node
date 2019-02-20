@@ -26,6 +26,16 @@ export default class QuotaLoader {
         }
     }
 
+    async getQuotaDist(): Promise<Array<{_id: string, projectID: string, queObjectID: Array<string>, dt: number, questions: Array<Array<string>>}>> {
+        try{
+            let response = await $http.post('/api/getQuotaDist',{projectID: this.projectID});
+            if (response.status === 200) return response.data;
+            return [];
+        } catch(e) {
+            return [];
+        }
+    }
+
     async getQuota(): Promise<Array<{_id: string, projectID: string, questions: Array<string>, maxPage: number, quotaValues:Array<{name: string, value:string, cnt:string}>}>> {
         try{
             let response = await $http.post('/api/getQuota',{projectID: this.projectID});
@@ -47,8 +57,6 @@ export default class QuotaLoader {
         return [];
     }
 
-
-
     async setQuota(params: object): Promise<object> {
         try{
             let response = await $http.post('/api/setQuota',{projectID: this.projectID, ... params});
@@ -65,6 +73,16 @@ export default class QuotaLoader {
             if (response.status === 200) return response.data;
             return {};
         } catch(e) {
+            return {errMsg: e.message};
+        }
+    }
+
+    async setQuotaDist(params: object): Promise<object> {
+        try{
+            let response = await $http.post('/api/setQuotaDist',{projectID: this.projectID, ... params});
+            if (response.status === 200) return response.data;
+            return {};
+        }catch(e) {
             return {errMsg: e.message};
         }
     }

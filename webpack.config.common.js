@@ -40,6 +40,11 @@ module.exports = {
             hmwScript,
             './src/quotaView.ts',
         ],
+        'quotaDist': [
+            '@babel/polyfill',
+            hmwScript,
+            './src/quotaDist.ts',
+        ],
         'login': [
             '@babel/polyfill',
             hmwScript,
@@ -198,20 +203,12 @@ module.exports = {
             minify: {
                 removeComments: true,
                 collapseWhitespace: true,
-                removeRedundantAttributes: true,
-                useShortDoctype: true,
-                removeEmptyAttributes: true,
-                removeStyleLinkTypeAttributes: true,
-                keepClosingSlash: true,
-                minifyJS: true,
-                minifyCSS: true,
-                minifyURLs: true
+                conservativeCollapse: true
             },
             meta: {
                 'viewport': 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
             }
         }),
-        /*
         new HtmlWebpackPlugin({
             title: 'Quota',
             filename: './views/quotaView.ejs',
@@ -234,7 +231,30 @@ module.exports = {
             meta: {
                 'viewport': 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
             }
-        }),        */
+        }),
+        new HtmlWebpackPlugin({
+            title: 'QuotaDist',
+            filename: './views/quotaDist.ejs',
+            template: "./views/quotaDist.ejs",
+            inject: 'body',
+            alwaysWriteToDisk: true,
+            chunks: ['default','quotaDist'],
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true
+            },
+            meta: {
+                'viewport': 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
+            }
+        }),
         new HtmlWebpackPlugin({
             title: 'Login',
             filename: './views/login.ejs',

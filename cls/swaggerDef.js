@@ -157,6 +157,21 @@ module.exports =  (() => {
                         }
                     }
                 },
+                "/getQuotaDist": {
+                    "post": {
+                        "x-swagger-router-controller": "getQuotaDist",
+                        "operationId": "getQuotaDist",
+                        "tags": ["api"],
+                        "description": "QUOTA 배포 링크 설정",
+                        "parameters": [
+                            {"name": "projectID", "in": "formData", "type": "string", "required": true,"description": "프로젝트 아이디(PID)", "default": "S43208nfmx6x"},
+                            {"name": "_ids", "in": "formData", "type": "array", "required": true, "desction": "OBJECT IDS"}
+                        ],
+                        "responses": {
+                            "200": {"description": "정상"}
+                        }
+                    }
+                },
                 "/getQuotaCnt": {
                     "post": {
                         "x-swagger-router-controller": "getQuotaCnt",

@@ -8,7 +8,6 @@ module.exports = async function load(req, res, next, db, forceParams){
         const authKey = forceParams ? params.akey : params.authKey;
         const mode = params.mode || 'file';
         const redirectUrl = params.redirectUrl;
-        console.log(req.body, req.query);
         let pass = false;
         if (pid === undefined) return {errMsg: 'invalid parameters'};
         let output ={};
@@ -35,6 +34,7 @@ module.exports = async function load(req, res, next, db, forceParams){
             req.session.cookie.expires = new Date(Date.now() + global.expireTime);
             req.session.cookie.maxAge = global.expireTime;
             req.session.userID = 'test';
+            req.session.projectID = pid;
             return {"pass": true, "redirectUrl": redirectUrl};
         }
         return output;
