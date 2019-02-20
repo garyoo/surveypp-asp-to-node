@@ -1,5 +1,4 @@
 import $http from 'axios';
-import topMenu from '../src/topMenu';
 export default class ReportLoader {
     _questions?: {};
     constructor(private projectID: string){
