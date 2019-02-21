@@ -12,15 +12,10 @@ module.exports = async function load(req, db){
             if ( mode === 'file') {
                 let questionFile = path.join(__dirname,'../survey', pid, 'questions.json');
                 if(fs.existsSync(questionFile)) {
-                    let questionJSON = JSON.parse(fs.readFileSync(questionFile, 'utf-8').toString())
-                    let questionArray = questionJSON.Array;
-                    console.log(questionArray.map(q=> {
-                        return {
-                            QtnType: q.QtnType,
-                            QtnName: q.QtnName,
-                            QuestionText: q.QuestionText,
-                        };
-                    }));
+                    let questionJSON = JSON.parse(fs.readFileSync(questionFile, 'utf-8').toString());
+                    console.log(questionJSON);
+                    let questionArray = Object.values(questionJSON.questionsObject);
+
                     return questionArray.map(q=> {
                         return {
                             QtnType: q.QtnType,
