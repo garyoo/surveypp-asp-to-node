@@ -104,9 +104,6 @@ router.use(async (req, res, next) => {
     const routerPath = path.join(__dirname,'cls','routerDef.js');
     if (process.env.NODE_ENV === "development") delete require.cache[require.resolve(routerPath)];
     let routes = require(routerPath);
-
-    console.log(routes);
-
     const requestUrl = req.path.substr(1);
     const renderPage = routes.find(r => r.request === requestUrl);
     if (renderPage) {
