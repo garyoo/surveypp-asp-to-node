@@ -4,6 +4,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const SriPlugin = require('webpack-subresource-integrity');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const hmwScript = `webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true`;
+
+
 module.exports = {
     target: 'web',
     context: __dirname,
@@ -34,6 +36,11 @@ module.exports = {
             '@babel/polyfill',
             hmwScript,
             './src/quota.ts',
+        ],
+        'quotaPublic': [
+            '@babel/polyfill',
+            hmwScript,
+            './src/quotaPublic.ts',
         ],
         'quotaView': [
             '@babel/polyfill',
@@ -216,6 +223,29 @@ module.exports = {
             inject: 'body',
             alwaysWriteToDisk: true,
             chunks: ['default','quotaView'],
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true
+            },
+            meta: {
+                'viewport': 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
+            }
+        }),
+        new HtmlWebpackPlugin({
+            title: 'Quota Public',
+            filename: './views/quotaPublic.ejs',
+            template: "./views/quotaPublic.ejs",
+            inject: 'body',
+            alwaysWriteToDisk: true,
+            chunks: ['default','quotaPublic'],
             minify: {
                 removeComments: true,
                 collapseWhitespace: true,

@@ -36,9 +36,9 @@ export default class QuotaLoader {
         }
     }
 
-    async getQuota(): Promise<Array<{_id: string, projectID: string, questions: Array<string>, maxPage: number, quotaValues:Array<{name: string, value:string, cnt:string}>}>> {
+    async getQuota(objectID?: string): Promise<Array<{_id: string, projectID: string, questions: Array<string>, maxPage: number, quotaValues:Array<{name: string, value:string, cnt:string}>}>> {
         try{
-            let response = await $http.post('/api/getQuota',{projectID: this.projectID});
+            let response = await $http.post('/api/getQuota',{projectID: this.projectID, objectID: objectID});
             if (response.status === 200) return response.data;
             return [];
         } catch(e) {

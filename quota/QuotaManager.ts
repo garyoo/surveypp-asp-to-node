@@ -326,8 +326,6 @@ class QuotaTable {
                 }
                 background.css({'width': `${width}%`});
                 $span.text(`${com}/${all}`);
-
-
             });
         }
         return $tableWrapper;
@@ -349,7 +347,8 @@ export class QuotaManager {
     authorize: boolean;
 
 
-    constructor(private projectID: string, private onlyView: boolean) {
+
+    constructor(private projectID: string, private onlyView: boolean, private publicObjectID?: string) {
         this.authorize = false;
 
         this.quotaLoader = new QuotaLoader(this.projectID);
@@ -362,7 +361,9 @@ export class QuotaManager {
         this.$newQuotaCloseBtn = $('#new-quota-close-btn');
         this.$newQuotaCloseBtn.on('click', evt => {
             this.newQuotaToggle(false);
-            this.init();
+            this.init().then(result => {
+                console.log(result);
+            });
         });
 
         //MARK: 보이는 경우에만
@@ -379,7 +380,10 @@ export class QuotaManager {
     async init(): Promise<void> {
         if (this.$newQuotaArea) this.$newQuotaArea.empty();
         this.questions = Object.values(await this.quotaLoader.getQuestions());
-        this.quotaObject = await this.quotaLoader.getQuota();
+        this.quotaObject = await this.quotaLoader.getQuota(this.publicObjectID);
+
+        console.log(this.quotaObject);
+
         this.renderExistsQuota();
         this.renderQuestions();
     }
@@ -547,9 +551,9 @@ export class QuotaDistManager {
     addBtn?: HTMLButtonElement|null;
     quotaLoader: QuotaLoader;
     modalCls?: QuotaDistAddModal;
-    $linkTbody?: HTMLElement|null;
+    linkTbody?: HTMLElement|null;
     quotaObject: Array<{_id: string, projectID: string, questions: Array<string>, maxPage: number, quotaValues:Array<{name: string, value:string, cnt:string}>}> = [];
-    quotaDist: Array<object> = [];
+    quotaDist: Array<{_id: string, projectID: string, queObjectID: Array<string>, dt: number, questions: Array<Array<string>>}> = [];
     constructor(private projectID: string) {
         if (document.getElementById('quota-dist-add-btn')) {
             this.addBtn = document.getElementById('quota-dist-add-btn') as HTMLButtonElement;
@@ -557,7 +561,7 @@ export class QuotaDistManager {
         }
 
         if(document.getElementById('quota-link-tbody')) {
-            this.$linkTbody = document.getElementById('quota-link-tbody');
+            this.linkTbody = document.getElementById('quota-link-tbody');
         }
 
         this.quotaLoader = new QuotaLoader(this.projectID);
@@ -565,10 +569,10 @@ export class QuotaDistManager {
     }
 
     async init(): Promise<void> {
-        if (this.$linkTbody) {
+        if (this.linkTbody) {
             this.quotaObject = await this.quotaLoader.getQuota();
             this.quotaDist = await this.quotaLoader.getQuotaDist();
-            console.log(this.quotaDist);
+            this.renderQuotaDist();
             this.modalCls = new QuotaDistAddModal({data:this.quotaObject, quotaLoader: this.quotaLoader});
         }
     }
@@ -579,5 +583,22 @@ export class QuotaDistManager {
             return;
         }
         if (this.modalCls) this.modalCls.toggle(true);
+    }
+
+    renderQuotaDist () {
+        if (this.linkTbody) {
+            let tbody = this.linkTbody;
+            this.quotaDist.forEach(d => {
+                let $tr: JQuery<HTMLTableRowElement> = $('<tr></tr>');
+                $(`<td class="d-none d-sm-block">${d._id}</td>`).appendTo($tr);
+                $(`<td></td>`).appendTo($tr);
+                let link = `${window.location.origin}/quotaPublic?pid=${this.projectID}&_id=${d._id}`;
+                $(`<td><a href="${link}">${link}</a></td>`).appendTo($tr);
+                $(`<td class="d-none d-sm-block">${new Date(d.dt).toLocaleString()}</td>`).appendTo($tr);
+                let $td: JQuery<HTMLTableCellElement> = $(`<td></td>`);
+                $td.appendTo($tr);
+                $tr.appendTo(tbody);
+            });
+        }
     }
 }
