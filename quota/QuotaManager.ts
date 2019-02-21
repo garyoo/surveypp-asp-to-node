@@ -634,17 +634,23 @@ export class QuotaDistManager {
             let tbody = this.linkTbody;
             this.quotaDist.forEach(d => {
                 let $tr: JQuery<HTMLTableRowElement> = $('<tr></tr>');
-                $(`<td class="d-none d-sm-block" style="font-size:0.7rem;">${d._id}</td>`).appendTo($tr);
+                $(`<td style="font-size:0.7rem;">${d._id}</td>`).appendTo($tr);
                 $(`<td></td>`).appendTo($tr);
                 let link = `${window.location.origin}/quotaPublic?pid=${this.projectID}&_id=${d._id}`;
                 $(`<td style="font-size:0.8rem;"><a href="${link}" target="_blank">${link}</a></td>`).appendTo($tr);
-                $(`<td  style="font-size:0.7rem;" class="d-none d-sm-block">${new Date(d.dt).toLocaleString()}</td>`).appendTo($tr);
+                $(`<td style="font-size:0.7rem;">${new Date(d.dt).toLocaleString()}</td>`).appendTo($tr);
                 let $td: JQuery<HTMLTableCellElement> = $(`<td></td>`);
-                let $modifyBtn: JQuery<HTMLButtonElement> = $('<button class="btn btn-outline-default btn-sm">수정</button>');
-                let $delBtn: JQuery<HTMLButtonElement> = $('<button class="btn btn-outline-danger btn-sm">삭제</button>');
+                let $modifyBtn: JQuery<HTMLButtonElement> = $('<button class="btn btn-block btn-outline-default btn-sm">수정</button>');
+                let $modifyBtnWrapper: JQuery<HTMLDivElement> = $('<div class="d-block"></div>');
 
-                $modifyBtn.appendTo($td);
-                $delBtn.appendTo($td);
+                let $delBtn: JQuery<HTMLButtonElement> = $('<button class="btn btn-block btn-outline-danger btn-sm">삭제</button>');
+                let $delBtnWrapper: JQuery<HTMLDivElement> = $('<div class="d-block"></div>');
+
+                $modifyBtn.appendTo($modifyBtnWrapper);
+                $delBtn.appendTo($delBtnWrapper);
+
+                $modifyBtnWrapper.appendTo($td);
+                $delBtnWrapper.appendTo($td);
                 $modifyBtn.get(0).addEventListener('click',(evt: Event) => this.modifyQuotaDist(evt,d));
                 $delBtn.get(0).addEventListener('click',(evt: Event) => this.deleteQuotaDist(evt,d));
 
