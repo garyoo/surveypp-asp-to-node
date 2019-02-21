@@ -17,8 +17,11 @@ export default class ReportLoader {
 
     async getQuestions(): Promise<object> {
         try{
-            let response = await $http.post('/api/getQuestions',{projectID: this.projectID});
-            if (response.status === 200) return response.data.questionsObject;
+            let response = await $http.post('/api/getQuestionsForReportSet',{projectID: this.projectID});
+            if (response.status === 200) {
+                console.log(response.data)
+                return response.data.questionsObject;
+            }
             return {};
         } catch(e) {
             return {errMsg: e.message};
