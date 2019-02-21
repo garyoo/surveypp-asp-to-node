@@ -100,19 +100,12 @@ router.use(async (req, res, next) => {
         'getSurveyData'
     ];
     //
-    //TODO: ROUTING 해줄 파일이 있으면 이곳에 추가
-    let routes = [
-        {request: '', template: 'index'},
-        {request: 'index', template: 'index'},
-        {request: 'error', template: 'error'},
-        {request: 'router', template: 'router', async: true},
-        {request: 'quota', template: 'quota',auth: true},
-        {request: 'quotaDist', template: 'quotaDist',auth: true},
-        {request: 'quotaView', template: 'quotaView', async: true},
-        {request: 'login', template: 'login', async: true},
-        {request: 'report', template: 'report',auth: true},
-        {request: 'fieldWorkView', template: 'fieldWorkView', auth: true, async: true},
-    ];
+    //TODO: ROUTING 해줄 파일이 있으면 이곳에
+    const routerPath = path.join(__dirname,'cls','routerDef.js');
+    if (process.env.NODE_ENV === "development") delete require.cache[require.resolve(routerPath)];
+    let routes = require(routerPath);
+
+    console.log(routes);
 
     const requestUrl = req.path.substr(1);
     const renderPage = routes.find(r => r.request === requestUrl);
