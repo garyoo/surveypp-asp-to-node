@@ -24,8 +24,8 @@ const webConfig = {
             */
         ]),
     ],
-    //devtool: "inline-source-map",
-    devtool: 'eval',
+    devtool: "cheap-module-eval-source-map",
+    //devtool: 'eval',
     devServer: {
         contentBase: path.resolve(__dirname, "dist"),
         watchContentBase: true,

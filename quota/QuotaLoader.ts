@@ -1,6 +1,14 @@
 import $http from 'axios';
 
-export default class QuotaLoader {
+export interface QuotaObject {
+    _id: string,
+    projectID: string,
+    queObjectID: Array<string>,
+    dt: number,
+    questions: Array<Array<string>>
+}
+
+export class QuotaLoader {
     _questions?: {};
     constructor(private projectID: string){
         this.getQuestions().then((data) => {
@@ -26,7 +34,7 @@ export default class QuotaLoader {
         }
     }
 
-    async getQuotaDist(): Promise<Array<{_id: string, projectID: string, queObjectID: Array<string>, dt: number, questions: Array<Array<string>>}>> {
+    async getQuotaDist(): Promise<Array<QuotaObject>> {
         try{
             let response = await $http.post('/api/getQuotaDist',{projectID: this.projectID});
             if (response.status === 200) return response.data;
@@ -80,6 +88,16 @@ export default class QuotaLoader {
     async setQuotaDist(params: object): Promise<object> {
         try{
             let response = await $http.post('/api/setQuotaDist',{projectID: this.projectID, ... params});
+            if (response.status === 200) return response.data;
+            return {};
+        }catch(e) {
+            return {errMsg: e.message};
+        }
+    }
+
+    async removeQuotaDist(objectID: string): Promise<object> {
+        try{
+            let response = await $http.post('/api/removeQuotaDist',{projectID: this.projectID, objectID: objectID});
             if (response.status === 200) return response.data;
             return {};
         }catch(e) {

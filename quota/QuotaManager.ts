@@ -2,7 +2,7 @@ import $ from 'jquery';
 import 'aos/dist/aos.css';
 import Bmodal from 'bootstrap/js/dist/modal.js';
 
-import QuotaLoader from "./QuotaLoader";
+import {QuotaLoader, QuotaObject} from "./QuotaLoader";
 import {Que} from "../vo/Que.vo";
 import {QuestionType} from "../enum/QuestionType";
 import ClickEvent = JQuery.ClickEvent;
@@ -454,13 +454,23 @@ export class QuotaManager {
     }
 }
 
-export class QuotaDistAddModal {
+
+enum QuotaDistMode {
+    new = 0,
+    modify = 1
+}
+
+class QuotaDistAddModal {
+    projectID: string;
     modal: Bmodal;
     checkboxes: Array<HTMLInputElement> = [];
-    $saveBtn: JQuery<HTMLButtonElement>
+    $saveBtn: JQuery<HTMLButtonElement>;
     quotaLoader: QuotaLoader;
+    quotaDistManager: QuotaDistManager;
+    private objectID?: string|null;
+    mode: QuotaDistMode = QuotaDistMode.new;
 
-    constructor({data, quotaLoader}: {data: Array<{_id: string, projectID: string, questions: Array<string>, maxPage: number, quotaValues:Array<{name: string, value:string, cnt:string}>}>, quotaLoader: QuotaLoader}) {
+    constructor({projectID, data, quotaLoader, quotaDistManager}: {projectID: string, data: Array<{_id: string, projectID: string, questions: Array<string>, maxPage: number, quotaValues:Array<{name: string, value:string, cnt:string}>}>, quotaLoader: QuotaLoader, quotaDistManager: QuotaDistManager}) {
         // language=HTML
         let modalHtml = `<div class="modal" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-lg" role="document">
@@ -499,8 +509,9 @@ export class QuotaDistAddModal {
         this.$saveBtn = $(`<button type="button" class="btn btn-primary">저장</button>`);
         this.$saveBtn.get(0).addEventListener('click',(e: Event) => this.save(e));
         this.$saveBtn.prependTo($footer);
-
+        this.projectID = projectID;
         this.quotaLoader = quotaLoader;
+        this.quotaDistManager = quotaDistManager;
         for(let d of data) {
             let $cb: JQuery<HTMLInputElement> = $(`<input type="checkbox" value="${d._id}" id="quota-dist-${d._id}"/>`);
             this.checkboxes.push($cb.get(0));
@@ -531,7 +542,10 @@ export class QuotaDistAddModal {
             return;
         }
         this.$saveBtn.get(0).disabled = true;
-        this.quotaLoader.setQuotaDist({_ids: checked.map(c => c.value)})
+
+        let saveParams = {_ids: checked.map(c => c.value)};
+        if (this.objectID) saveParams['objectID'] = this.objectID;
+        this.quotaLoader.setQuotaDist(saveParams)
             .then(result => {
                 if (result['errMsg']){
                     alert(result['errMsg']);
@@ -540,12 +554,33 @@ export class QuotaDistAddModal {
                     this.toggle(false);
                 }
                 this.$saveBtn.get(0).disabled = false;
+                this.quotaDistManager.init();
             })
             .catch(error => {
                 alert(error);
             });
     }
+
+    new() {
+        this.mode = QuotaDistMode.new;
+        this.objectID = null;
+        for(let cb of this.checkboxes) {
+            cb.checked = false;
+        }
+        this.toggle(true);
+    }
+
+    modify(data: QuotaObject) {
+        this.mode = QuotaDistMode.modify;
+        this.objectID = data._id;
+        for(let cb of this.checkboxes) {
+            cb.checked = false;
+            if(data.queObjectID.find(q => cb.value === q))cb.checked = true;
+        }
+    }
 }
+
+
 
 export class QuotaDistManager {
     addBtn?: HTMLButtonElement|null;
@@ -553,27 +588,36 @@ export class QuotaDistManager {
     modalCls?: QuotaDistAddModal;
     linkTbody?: HTMLElement|null;
     quotaObject: Array<{_id: string, projectID: string, questions: Array<string>, maxPage: number, quotaValues:Array<{name: string, value:string, cnt:string}>}> = [];
-    quotaDist: Array<{_id: string, projectID: string, queObjectID: Array<string>, dt: number, questions: Array<Array<string>>}> = [];
+    quotaDist: Array<QuotaObject> = [];
+
     constructor(private projectID: string) {
         if (document.getElementById('quota-dist-add-btn')) {
             this.addBtn = document.getElementById('quota-dist-add-btn') as HTMLButtonElement;
-            this.addBtn.addEventListener('click', (e:Event) => this.addQuotaDist(e));
+            if (this.addBtn.getAttribute('data-event-bind') === null) {
+                this.addBtn.setAttribute('data-event-bind', 'true');
+                this.addBtn.addEventListener('click', (e:Event) => this.addQuotaDist(e));
+            }
         }
 
         if(document.getElementById('quota-link-tbody')) {
             this.linkTbody = document.getElementById('quota-link-tbody');
         }
-
         this.quotaLoader = new QuotaLoader(this.projectID);
-
     }
 
-    async init(): Promise<void> {
+    init()  {
+        this.render().then(result => {
+            console.log(this);
+            this.modalCls = new QuotaDistAddModal({projectID: this.projectID, data:this.quotaObject, quotaLoader: this.quotaLoader, quotaDistManager: this});
+        });
+    }
+
+    async render(): Promise<void>{
         if (this.linkTbody) {
+            this.linkTbody.innerHTML = '';
             this.quotaObject = await this.quotaLoader.getQuota();
             this.quotaDist = await this.quotaLoader.getQuotaDist();
             this.renderQuotaDist();
-            this.modalCls = new QuotaDistAddModal({data:this.quotaObject, quotaLoader: this.quotaLoader});
         }
     }
 
@@ -582,7 +626,7 @@ export class QuotaDistManager {
             alert('설정된 쿼터가 없습니다.');
             return;
         }
-        if (this.modalCls) this.modalCls.toggle(true);
+        if (this.modalCls) this.modalCls.new();
     }
 
     renderQuotaDist () {
@@ -590,15 +634,40 @@ export class QuotaDistManager {
             let tbody = this.linkTbody;
             this.quotaDist.forEach(d => {
                 let $tr: JQuery<HTMLTableRowElement> = $('<tr></tr>');
-                $(`<td class="d-none d-sm-block">${d._id}</td>`).appendTo($tr);
+                $(`<td class="d-none d-sm-block" style="font-size:0.7rem;">${d._id}</td>`).appendTo($tr);
                 $(`<td></td>`).appendTo($tr);
                 let link = `${window.location.origin}/quotaPublic?pid=${this.projectID}&_id=${d._id}`;
-                $(`<td><a href="${link}">${link}</a></td>`).appendTo($tr);
-                $(`<td class="d-none d-sm-block">${new Date(d.dt).toLocaleString()}</td>`).appendTo($tr);
+                $(`<td style="font-size:0.8rem;"><a href="${link}" target="_blank">${link}</a></td>`).appendTo($tr);
+                $(`<td  style="font-size:0.7rem;" class="d-none d-sm-block">${new Date(d.dt).toLocaleString()}</td>`).appendTo($tr);
                 let $td: JQuery<HTMLTableCellElement> = $(`<td></td>`);
+                let $modifyBtn: JQuery<HTMLButtonElement> = $('<button class="btn btn-outline-default btn-sm">수정</button>');
+                let $delBtn: JQuery<HTMLButtonElement> = $('<button class="btn btn-outline-danger btn-sm">삭제</button>');
+
+                $modifyBtn.appendTo($td);
+                $delBtn.appendTo($td);
+                $modifyBtn.get(0).addEventListener('click',(evt: Event) => this.modifyQuotaDist(evt,d));
+                $delBtn.get(0).addEventListener('click',(evt: Event) => this.deleteQuotaDist(evt,d));
+
                 $td.appendTo($tr);
                 $tr.appendTo(tbody);
             });
         }
     }
+
+    modifyQuotaDist(evt: Event, data: QuotaObject) {
+        if (this.modalCls) {
+            this.modalCls.modify(data);
+            this.modalCls.toggle(true);
+        }
+    }
+
+    deleteQuotaDist(evt: Event, data: QuotaObject) {
+        if(!confirm("배포 링크를 삭제하시겠습니까?"))return;
+        this.quotaLoader.removeQuotaDist(data._id).then(result => {
+            this.init();
+        });
+    }
+
+
+
 }

@@ -10,17 +10,22 @@ module.exports = async (req, db) => {
 
     try{
         let mongo = await db.get();
-        let set = {};
         let find = {projectID: params.projectID};
         find['_id'] = {$in: params._ids.map(id => new converter((id)))};
-        console.log(find);
         let quotas = await mongo.collection('SV_QUOTA').find(find).toArray();
         let objectIds = quotas.map(q => q._id);
         let questions = quotas.map(q => q.questions);
 
-        set = {$set: {dt: new Date().valueOf(), questions: questions, updater: req.session}};
-        let update = await mongo.collection('SV_QUOTA_DIST').findOneAndUpdate({projectID: params.projectID, queObjectID: objectIds},set,{upsert: true});
-        output['msg'] = update.value ? '업데이트 되었습니다.' : '추가 되었습니다.';
+        let set = {projectID: params.projectID, dt: new Date().valueOf(), questions: questions, updater: req.session, queObjectID: objectIds};
+        if (params.objectID) {
+            let updateFind = {_id: new converter(params.objectID)};
+            let update = await mongo.collection('SV_QUOTA_DIST').findOneAndUpdate(updateFind,{$set: set});
+            output['msg'] = update.value ? '업데이트 되었습니다.' : '추가 되었습니다.';
+        } else {
+            let insert = await mongo.collection('SV_QUOTA_DIST').insertOne(set);
+            output['msg'] = '추가 되었습니다.';
+        }
+
     } catch(e) {
         output['errMsg'] = e.message;
     }
