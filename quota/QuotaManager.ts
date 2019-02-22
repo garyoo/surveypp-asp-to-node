@@ -641,10 +641,10 @@ export class QuotaDistManager {
                 $(`<td style="font-size:0.8rem;"><a href="${link}" target="_blank">${link}</a></td>`).appendTo($tr);
                 $(`<td style="font-size:0.7rem;">${new Date(d.dt).toLocaleString()}</td>`).appendTo($tr);
                 let $td: JQuery<HTMLTableCellElement> = $(`<td></td>`);
-                let $modifyBtn: JQuery<HTMLButtonElement> = $('<button class="btn btn-block btn-outline-default btn-sm">수정</button>');
+                let $modifyBtn: JQuery<HTMLButtonElement> = $('<button class="btn btn-block btn-primary btn-sm">수정</button>');
                 let $modifyBtnWrapper: JQuery<HTMLDivElement> = $('<div class="d-block"></div>');
 
-                let $delBtn: JQuery<HTMLButtonElement> = $('<button class="btn btn-block btn-outline-danger btn-sm">삭제</button>');
+                let $delBtn: JQuery<HTMLButtonElement> = $('<button class="btn btn-block btn-danger btn-sm">삭제</button>');
                 let $delBtnWrapper: JQuery<HTMLDivElement> = $('<div class="d-block"></div>');
 
                 $modifyBtn.appendTo($modifyBtnWrapper);

@@ -1,4 +1,4 @@
-module.exports = async (req, res, next, db) => {
+module.exports = async ({req, res, next, db, mssql}) => {
     return (async () =>{
         const params = req.query;
         const projectID = params.pid;

@@ -115,7 +115,7 @@ router.use(async (req, res, next) => {
         let outputData;
         if (fs.existsSync(dataFilePath) && renderPage.async) {
             if (process.env.NODE_ENV === "development") delete require.cache[require.resolve(dataFilePath)];
-            outputData = await require(dataFilePath)(req, res, next, mongo);
+            outputData = await require(dataFilePath)({req: req, res: res, next: next, db: mongo, sql: renderPage.mssql ? mssql : undefined});
         }
         if (renderPage.auth && req.session) {
             if (req.query.akey) {

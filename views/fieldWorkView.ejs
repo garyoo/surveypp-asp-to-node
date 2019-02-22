@@ -16,11 +16,31 @@
         table.table > tbody > tr > td.date{
             font-weight: bold;
         }
+
+        div.d-table-row {
+
+        }
+
+        div.d-table-head {
+            border: 1px solid #e3e3e3;
+            padding: 5px 5px 5px 5px;
+            border-collapse: collapse;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        div.d-table-body {
+            border: 1px solid #e3e3e3;
+            padding: 5px 5px 5px 5px;
+            border-collapse: collapse;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="bg-secondary">
 <%include ./includes/topMenu.ejs%>
 <div class="container-fluid my-4">
+    <%if (data.execType === 'fwv'){%>
     <div class="row">
         <div class="col-10 offset-1 border rounded p-4">
             <h5>응답자 현황</h5>
@@ -148,6 +168,71 @@
             </table>
         </div>
     </div>
+    <%} else if (data.execType === 'exsch'){%>
+        <div class="row">
+            <div class="col-10 offset-1 border rounded p-4">
+                <h5>응답자 데이터 제외 검색</h5>
+            </div>
+        </div>
+    <%} else if (data.execType === 'reWrite'){%>
+        <div class="row">
+            <div class="col-10 offset-1 border rounded p-4">
+                <h5>데이터 수정</h5>
+            </div>
+        </div>
+    <%} else if (data.execType === 'rdtView'){%>
+        <div class="row">
+            <div class="col-10 offset-1 border rounded p-4">
+                <h5>연동 설정</h5>
+                <div class="d-table border rounded w-100">
+                    <div class="d-table-row">
+                        <div class="d-table-cell d-table-head">
+                            그룹명
+                        </div>
+                        <div class="d-table-cell d-table-head">
+                            상태
+                        </div>
+                        <div class="d-table-cell d-table-head">
+                            컨트롤
+                        </div>
+                        <div class="d-table-cell d-table-head">
+                            메세지
+                        </div>
+                        <div class="d-table-cell d-table-head">
+                            URLS
+                        </div>
+                        <div class="d-table-cell d-table-head">
+                            종료 일시
+                        </div>
+                    </div>
+                    <%
+                        for(let [idx,d] of Object.values(data.project).entries()) {
+                            console.log(d);
+                    %>
+                        <div class="d-table-row">
+                            <div class="d-table-cell d-table-body"><%=d.name%></div>
+                            <div class="d-table-cell d-table-body"><%=d.state%></div>
+                            <div class="d-table-cell d-table-body"><%=d.control%></div>
+                            <div class="d-table-cell d-table-body"><%=d.msg%></div>
+                            <div class="d-table-cell d-table-body" style="font-size:0.9rem;">
+                                <div class="d-block text-left"><%-[`CO: ${d['co']}`,`SO: ${d['so']}`,`QO: ${d['qo']}`, `BO: ${d['bo']}`].join('</div><div class="d-block text-left">')%></div>
+                            </div>
+                        </div>
+
+                    <%
+                            //console.log(idx, d);
+                        }
+                    %>
+                </div>
+            </div>
+        </div>
+    <%} else if (data.execType === 'dataReset'){%>
+        <div class="row">
+            <div class="col-10 offset-1 border rounded p-4">
+                <h5>데이터 초기화</h5>
+            </div>
+        </div>
+    <%}%>
 </div>
 </body>
 </html>

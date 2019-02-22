@@ -9,5 +9,5 @@ module.exports = [
     {request: 'quotaView', template: 'quotaView', async: true},
     {request: 'login', template: 'login', async: true},
     {request: 'report', template: 'report',auth: true},
-    {request: 'fieldWorkView', template: 'fieldWorkView', auth: true, async: true},
+    {request: 'fieldWorkView', template: 'fieldWorkView', auth: true, async: true, mssql: true},
 ];

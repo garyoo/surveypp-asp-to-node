@@ -6,17 +6,17 @@
                     Field work
                 </a>
                 <div id="div-fieldWork" class="dropdown-menu bg-light" aria-labelledby="field-work-dropdown">
-                    <a class="dropdown-item" href="#">FieldWork Report</a>
-                    <a class="dropdown-item" href="#">데이터 수정</a>
-                    <a class="dropdown-item" href="#">연동 설정</a>
-                    <a class="dropdown-item" href="#">설문 테스트</a>
+                    <a class="dropdown-item" href="/fieldWorkView?pid=<%=query.pid%>&execType=fwv">FieldWork Report</a>
+                    <a class="dropdown-item" href="/fieldWorkView?pid=<%=query.pid%>&execType=reWrite">데이터 수정</a>
+                    <a class="dropdown-item" href="/fieldWorkView?pid=<%=query.pid%>&execType=rdtView">연동 설정</a>
+                    <a class="dropdown-item" href="/?pid=<%=query.pid%>&grpid=TG" target="_blank">설문 테스트</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">응답 제외</a>
-                    <a class="dropdown-item" href="#">응답 초기화</a>
+                    <a class="dropdown-item" href="/fieldWorkView?pid=<%=query.pid%>&execType=exsch">응답 제외</a>
+                    <a class="dropdown-item" href="/fieldWorkView?pid=<%=query.pid%>&execType=dataReset">응답 초기화</a>
                 </div>
             </li>
             <li id="li-report" name="report" class="nav-item">
-                <a class="nav-link" href="#" id="report-set-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Report</a>
+                <a class="nav-link" href="/report?pid=<%=query.pid%>" id="report-set-dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Report</a>
             </li>
             <li id="li-reportSet" name="reportSet" class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="report-set-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
