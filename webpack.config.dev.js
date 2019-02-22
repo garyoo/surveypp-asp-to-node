@@ -17,6 +17,7 @@ const webConfig = {
         new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackHardDiskPlugin(),
         new CopyWebpackPlugin([
+            {from: './public'}
             /*
             {from: './conf',to:'./conf'},
             {from: './cls/mongo.js',to: './cls/mongo.js'},

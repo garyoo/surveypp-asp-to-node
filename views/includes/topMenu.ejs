@@ -29,17 +29,17 @@
                     <a class="dropdown-item" href="#">배포 리포트링크</a>
                 </div>
             </li>
-            <li id="li-quota" name="quota" class="nav-item dropdown">
-                <a class="nav-link" href="#" id="quota-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Quota</a>
+            <li id="li-quota" name="quota" class="nav-item">
+                <a class="nav-link" href="./quotaView?pid=<%=query.pid%>" id="quota-dropdown" role="button"aria-haspopup="true" aria-expanded="false">Quota</a>
             </li>
             <li id="li-quotaSet" name="quotaSet" class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="quota-set-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     QuotaSet
                 </a>
                 <div id="div-QuotaSet" class="dropdown-menu bg-light" aria-labelledby="quota-set-dropdown">
-                    <a class="dropdown-item" href="#">쿼터 설정</a>
+                    <a class="dropdown-item" href="./quota?pid=<%=query.pid%>">쿼터 설정</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">배포 쿼터링크</a>
+                    <a class="dropdown-item" href="./quotaDist?pid=<%=query.pid%>">배포 쿼터링크</a>
                 </div>
             </li>
             <li id="li-download" name="download" class="nav-item dropdown">

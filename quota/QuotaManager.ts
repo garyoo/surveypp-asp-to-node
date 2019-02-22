@@ -1,11 +1,10 @@
 import $ from 'jquery';
-import 'aos/dist/aos.css';
 import Bmodal from 'bootstrap/js/dist/modal.js';
-
 import {QuotaLoader, QuotaObject} from "./QuotaLoader";
 import {Que} from "../vo/Que.vo";
 import {QuestionType} from "../enum/QuestionType";
 import ClickEvent = JQuery.ClickEvent;
+import LayerManager from "../managers/LayerManager";
 class QuotaTable {
     quotaInputs: Array<HTMLInputElement> = [];
     quotaTds: Array<{name: string, value: string, dom:HTMLElement}> = [];
@@ -345,11 +344,13 @@ export class QuotaManager {
     $questionList: JQuery<HTMLOListElement>;
     $quotaInputs: Array<HTMLInputElement>;
     authorize: boolean;
-
+    layerManager: LayerManager;
 
 
     constructor(private projectID: string, private onlyView: boolean, private publicObjectID?: string) {
         this.authorize = false;
+        this.layerManager = new LayerManager();
+        this.layerManager.loading();
 
         this.quotaLoader = new QuotaLoader(this.projectID);
         this.$showQuotaArea = $('#show-quota-area');
@@ -381,11 +382,9 @@ export class QuotaManager {
         if (this.$newQuotaArea) this.$newQuotaArea.empty();
         this.questions = Object.values(await this.quotaLoader.getQuestions());
         this.quotaObject = await this.quotaLoader.getQuota(this.publicObjectID);
-
-        console.log(this.quotaObject);
-
         this.renderExistsQuota();
         this.renderQuestions();
+        this.layerManager.loading();
     }
 
     newQuotaToggle(flag: boolean): void {
@@ -606,8 +605,10 @@ export class QuotaDistManager {
     }
 
     init()  {
+        let block = new LayerManager();
+        block.loading();
         this.render().then(result => {
-            console.log(this);
+            block.loading();
             this.modalCls = new QuotaDistAddModal({projectID: this.projectID, data:this.quotaObject, quotaLoader: this.quotaLoader, quotaDistManager: this});
         });
     }
