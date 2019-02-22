@@ -4,7 +4,7 @@ import { SurveyModule } from "../SurveyModule";
 import Plyr from 'plyr';
 import 'plyr/dist/plyr.css';
 import 'plyr/dist/plyr.polyfilled.min';
-import SurveyConfig from "../../cls/SurveyConfig";
+import SurveyConfig from "../../managers/SurveyConfig";
 import $http from 'axios';
 
 export class VideoDisplay extends SurveyModule{

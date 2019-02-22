@@ -1,7 +1,7 @@
 import { Que } from "../../vo/Que.vo";
 import $ from "jquery";
 import { SurveyModule } from "../SurveyModule";
-import ImageManager from "../../cls/ImageManager";
+import ImageManager from "../../managers/ImageManager";
 
 export class Description extends SurveyModule{
     constructor({ que, answered , questions, pageUserScript }: { que: Que, answered: object, questions: object, pageUserScript?: string }) {

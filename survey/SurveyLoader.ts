@@ -3,8 +3,8 @@ import $http from 'axios';
 import {DataSet, QuotaSet} from "../vo/DataSet.vo";
 import {NextModule, QuestionType} from "../enum/QuestionType";
 import {GroupID, LogicMode} from "../enum/Config"
-import Common from "../cls/Common";
-import SurveyConfig from "../cls/SurveyConfig";
+import Common from "../managers/Common";
+import SurveyConfig from "../managers/SurveyConfig";
 import ProjectConfig from "../vo/ProjectConfig.vo";
 import Ex from "../vo/Ex.vo";
 

@@ -2,10 +2,10 @@ import {Que} from "../vo/Que.vo";
 import $ from "jquery";
 import Ex from "../vo/Ex.vo";
 import {QuestionType, TableEDP} from "../enum/QuestionType";
-import SurveyConfig from "../cls/SurveyConfig";
-import Common from "../cls/Common";
+import SurveyConfig from "../managers/SurveyConfig";
+import Common from "../managers/Common";
 import {GlobalReplacer} from "../enum/Config";
-import ImageManager from "../cls/ImageManager";
+import ImageManager from "../managers/ImageManager";
 
 /*
 * TODO: 모듈별로 카테고리(value > 10000?) 적용해야함..

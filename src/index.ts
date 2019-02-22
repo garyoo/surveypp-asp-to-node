@@ -1,4 +1,4 @@
-import SurveyConfig from "../cls/SurveyConfig";
+import SurveyConfig from "../managers/SurveyConfig";
 import {Lang, LogicMode} from "../enum/Config";
 import {SurveyManager} from '../survey/SurveyManager';
 import $http from 'axios';

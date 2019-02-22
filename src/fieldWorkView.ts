@@ -1,4 +1,4 @@
-import FieldWorkManager from '../cls/FieldWorkManager';
+import FieldWorkManager from '../managers/FieldWorkManager';
 
 (() => {
     function getQS (key) {

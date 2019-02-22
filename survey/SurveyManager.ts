@@ -3,9 +3,9 @@ import {Que} from '../vo/Que.vo';
 import SurveyLoader from "./SurveyLoader";
 import {SurveyModule} from './SurveyModule';
 import {QuestionType} from "../enum/QuestionType";
-import SurveyConfig from "../cls/SurveyConfig";
-import AlertManager from "../cls/AlertManager";
-import TestManager from "../cls/TestManager";
+import SurveyConfig from "../managers/SurveyConfig";
+import AlertManager from "../managers/AlertManager";
+import TestManager from "../managers/TestManager";
 import ProjectConfig from '../vo/ProjectConfig.vo';
 import {GroupID} from "../enum/Config";
 
