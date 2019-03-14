@@ -21,15 +21,24 @@ function getEntriesForApi() {
 const webConfig = {
     mode: 'production',
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env':{
+                'NODE_ENV': JSON.stringify('production'),
+                'VERSION': JSON.stringify('1.0.0')
+            }
+        }),
         new CleanWebpackPlugin(['dist']),
         new CopyWebpackPlugin([
-            /*
             {from: './conf',to:'./conf'},
+            {from: './cls',to:'./cls'},
+            //{from: './api',to:'./api'},
+            {from: './survey',to:'./survey'},
+            /*
             {from: './cls/mongo.js',to: './cls/mongo.js'},
             {from: './cls/mssql.js',to: './cls/mssql.js'},
             {from: './views/error.ejs', to:'./dist/views/error.ejs'},
             */
-            //{from: './api',to:'./api'},
+            //
             //{from: './bin', to: './bin'},
             //{from: './app.js',to: './app.js'},
         ])

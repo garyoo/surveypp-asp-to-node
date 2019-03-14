@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const SriPlugin = require('webpack-subresource-integrity');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const hmwScript = `webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true`;
+const hmwScript = `webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=${process.env.NODE_ENV === 'production' ? 'true' : 'false'}`;
 
 
 module.exports = {
@@ -124,7 +124,7 @@ module.exports = {
         new webpack.ProvidePlugin({
             _: "underscore"
         }),
-        //new webpack.HotModuleReplacementPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional

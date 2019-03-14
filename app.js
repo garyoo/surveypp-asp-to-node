@@ -24,7 +24,7 @@ const wpHotMW = require('webpack-hot-middleware');
 
 const app = express();
 const DIST_DIR = path.join(__dirname, 'dist');
-router = express.Router();
+const router = express.Router();
 
 
 app.use(useragent.express());
@@ -102,60 +102,64 @@ router.use(async (req, res, next) => {
     //
     //TODO: ROUTING 해줄 파일이 있으면 이곳에
     const routerPath = path.join(__dirname,'cls','routerDef.js');
-    if (process.env.NODE_ENV === "development") delete require.cache[require.resolve(routerPath)];
-    let routes = require(routerPath);
-    const requestUrl = req.path.substr(1);
-    const renderPage = routes.find(r => r.request === requestUrl);
-    if (renderPage) {
-        res.locals.query = req.query;
-        res.locals.res = res;
-        res.locals.redirectUrl = req.originalUrl || req.url;
+    if(fs.existsSync(routerPath)) {
+        console.log(routerPath, fs.existsSync(routerPath));
+        if (process.env.NODE_ENV === "development") delete require.cache[require.resolve(routerPath)];
+        let routes = require('./cls/routerDef');
+        const requestUrl = req.path.substr(1);
+        const renderPage = routes.find(r => r.request === requestUrl);
+        if (renderPage) {
+            res.locals.query = req.query;
+            res.locals.res = res;
+            res.locals.redirectUrl = req.originalUrl || req.url;
 
-        let dataFilePath = path.join(__dirname, 'routes',`${requestUrl}.js`);
-        let outputData;
-        if (fs.existsSync(dataFilePath) && renderPage.async) {
+            let dataFilePath = path.join(__dirname, 'routes',`${requestUrl}.js`);
+            let outputData;
+            if (fs.existsSync(dataFilePath) && renderPage.async) {
+                if (process.env.NODE_ENV === "development") delete require.cache[require.resolve(dataFilePath)];
+                outputData = await require(dataFilePath)({req: req, res: res, next: next, db: mongo, sql: renderPage.mssql ? mssql : undefined});
+            }
+            if (renderPage.auth && req.session) {
+                if (req.query.akey) {
+                    let authPath = path.join(__dirname, 'api', 'getAuth.js');
+                    if (process.env.NODE_ENV === "development") delete require.cache[require.resolve(authPath)];
+                    let result = await require(authPath)(req, res, next, mongo, true);
+                }
+                if(req.session.userID === undefined) {
+                    return res.render('login', {query: req.query, res: res});
+                } else {
+                    req.session._garbage = Date();
+                    req.session.touch();
+                }
+            }
+            if (outputData) {
+                res.locals.data = outputData;
+                if (outputData.redirectUrl) return res.redirect(outputData.redirectUrl);
+                if (outputData.errMsg) return res.end(`${outputData.errMsg}`);
+            }
+            return res.render(renderPage.template,{query: req.query, data: res.locals.data});
+            /*
+            return res.render(
+                renderPage.template,
+                {
+                    query: req.query,
+                    res: res
+                }, //PASS DATA TO TEMPLATE
+                function (err , html) {
+                    if (err) return res.end(err.message);
+                    return res.send(html);
+              });
+              */
+        }
+        let apiUrl = requestUrl.split('/').pop();
+        if (!getApiRoutes.includes(apiUrl)) return next();
+        let dataFilePath = path.join(__dirname, 'api',`${apiUrl}.js`);
+        if (fs.existsSync(dataFilePath)) {
             if (process.env.NODE_ENV === "development") delete require.cache[require.resolve(dataFilePath)];
-            outputData = await require(dataFilePath)({req: req, res: res, next: next, db: mongo, sql: renderPage.mssql ? mssql : undefined});
+            return await require(dataFilePath)(req, res, next, mongo);
         }
-        if (renderPage.auth && req.session) {
-            if (req.query.akey) {
-                let authPath = path.join(__dirname, 'api', 'getAuth.js');
-                if (process.env.NODE_ENV === "development") delete require.cache[require.resolve(authPath)];
-                let result = await require(authPath)(req, res, next, mongo, true);
-            }
-            if(req.session.userID === undefined) {
-                return res.render('login', {query: req.query, res: res});
-            } else {
-                req.session._garbage = Date();
-                req.session.touch();
-            }
-        }
-        if (outputData) {
-            res.locals.data = outputData;
-            if (outputData.redirectUrl) return res.redirect(outputData.redirectUrl);
-            if (outputData.errMsg) return res.end(`${outputData.errMsg}`);
-        }
-        return res.render(renderPage.template,{query: req.query, data: res.locals.data});
-        /*
-        return res.render(
-            renderPage.template,
-            {
-                query: req.query,
-                res: res
-            }, //PASS DATA TO TEMPLATE
-            function (err , html) {
-                if (err) return res.end(err.message);
-                return res.send(html);
-          });
-          */
     }
-    let apiUrl = requestUrl.split('/').pop();
-    if (!getApiRoutes.includes(apiUrl)) return next();
-    let dataFilePath = path.join(__dirname, 'api',`${apiUrl}.js`);
-    if (fs.existsSync(dataFilePath)) {
-        if (process.env.NODE_ENV === "development") delete require.cache[require.resolve(dataFilePath)];
-        return await require(dataFilePath)(req, res, next, mongo);
-    }
+
     return next();
 });
 
